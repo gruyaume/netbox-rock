@@ -1,22 +1,50 @@
 name: netbox
 base: ubuntu@22.04
+build-base: ubuntu@22.04
 version: '3.6.5'
 summary: Document your network.
 description: |
       NetBox is the leading solution for modeling and documenting modern networks.
       By combining the traditional disciplines of IP address management (IPAM) and
       datacenter infrastructure management (DCIM) with powerful APIs and extensions,
-      NetBox provides the ideal "source of truth" to power network automation. Read
-      on to discover why thousands of organizations worldwide put NetBox at the
-      heart of their infrastructure.
+      NetBox provides the ideal "source of truth" to power network automation.
 
 license: Apache-2.0
 platforms:
     amd64:
 
 parts:
+    
     netbox:
-        plugin: python
+        plugin: dump
         source-type: git
         source-tag: v3.6.5
         source: https://github.com/netbox-community/netbox.git
+        build-packages:
+          - python3-venv
+          - ca-certificates
+        stage-packages:
+          - python3
+          - python3-venv
+          - python3
+          - python3-pip
+          - python3-dev
+          - build-essential
+          - libxml2-dev
+          - libxslt1-dev
+          - libffi-dev
+          - libpq-dev
+          - libssl-dev
+          - zlib1g-dev
+          - ca-certificates
+        organize:
+            "requirements.txt": opt/netbox/requirements.txt
+            "netbox": opt/netbox/netbox
+            "scripts": opt/netbox/scripts
+            "docs": opt/netbox/docs
+            "contrib": opt/netbox/contrib
+        # override-build: |
+        #   ls -la opt/netbox
+        #   python3 -m venv opt/netbox/venv
+        #   opt/netbox/venv/bin/python3 -m pip install --upgrade pip setuptools wheel
+        #   opt/netbox/venv/bin/pip install -r opt/netbox/requirements.txt
